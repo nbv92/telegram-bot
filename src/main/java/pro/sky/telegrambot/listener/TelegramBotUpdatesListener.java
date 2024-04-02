@@ -55,7 +55,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
             if (message.equals("/start")) {
                 logger.info("Получили стартовое сообщение: " + message);
-                telegramBotSender.send (chatId, "Hi!");
+                telegramBotSender.send (chatId, WELCOME_MESSAGE);
             }else {
                 Matcher matcher = INCOMING_MESSAGE_PATTERN.matcher(message);
                 if (matcher.matches()) {
