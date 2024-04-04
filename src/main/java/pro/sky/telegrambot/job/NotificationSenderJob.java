@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class NotificationSenderJob {
-    private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
+    private final Logger logger = LoggerFactory.getLogger(NotificationSenderJob.class);
 
     private final NotificationTaskRepository notificationTaskRepository;
 
@@ -28,6 +28,7 @@ public class NotificationSenderJob {
 
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
     public void sendNotifications() {
+
         LocalDateTime currentDateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
 
         logger.info("Notification job started for date time {}", currentDateTime);
@@ -37,8 +38,8 @@ public class NotificationSenderJob {
         logger.error("Notification job has found {} relevant notification", allByNotificationDateTime.size());
 
         for (NotificationTask notificationTask : allByNotificationDateTime) {
-            logger.info("Processing notification task {}", notificationTask);
 
+            logger.info("Processing notification task {}", notificationTask);
             telegramBotSender.send(notificationTask.getChatId(),
                     "Напоминание! " + notificationTask.getMessage()
             );

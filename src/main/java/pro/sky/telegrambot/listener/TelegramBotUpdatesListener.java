@@ -13,6 +13,7 @@ import pro.sky.telegrambot.service.TelegramBotSender;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +25,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private  final Pattern INCOMING_MESSAGE_PATTERN = Pattern.compile("([0-9\\.\\:\\s]{16})(\\s)([\\W+]+)");
 
-    private final DateTimeFormatter NOITIFICATION_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    private final DateTimeFormatter NOTIFICATION_DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
     private final TelegramBot telegramBot;
 
     private final TelegramBotSender telegramBotSender;
@@ -62,12 +63,18 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     logger.info ("Приняло новое сообщение: " + message);
 
                     String rawDateTime = matcher.group(1);
-                    String rawMessage = matcher.group(3);
+                    try {
+                        DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+                    } catch (DateTimeParseException e) {
+                        // обработка исключения (можно ничего не делать, если нужно просто пропустить обработку)
+                    }
+
+                    String notificationText = matcher.group(3);
 
                     NotificationTask notificationTask = new NotificationTask(
                             chatId,
-                            rawMessage,
-                            LocalDateTime.parse(rawDateTime, NOITIFICATION_DATE_TIME_FORMAT)
+                            notificationText,
+                            LocalDateTime.parse(rawDateTime, NOTIFICATION_DATE_TIME_FORMAT)
                     );
 
                     notificationTaskRepository.save(notificationTask);

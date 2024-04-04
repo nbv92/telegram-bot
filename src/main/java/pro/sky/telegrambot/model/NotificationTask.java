@@ -14,11 +14,14 @@ public class NotificationTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private final Long chatId;
+    private Long chatId;
 
-    private final String message;
+    private String message;
 
-    private final LocalDateTime notificationDateTime;
+    private LocalDateTime notificationDateTime;
+
+    public NotificationTask() {
+    }
 
     public NotificationTask(Long chatId, String message, LocalDateTime notificationDateTime) {
         this.chatId = chatId;
@@ -44,7 +47,6 @@ public class NotificationTask {
 
     @Override
     public boolean equals(Object o) {
-
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NotificationTask that = (NotificationTask) o;
